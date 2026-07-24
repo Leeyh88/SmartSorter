@@ -1,4 +1,4 @@
-# SmartSorter C# WPF DashboardSmartSorter 프로젝트의 C# .NET / WPF 대시보드 애플리케이션 사양 문서입니다.  
+# SmartSorter C# WPF 사양 문서입니다.  
 OpenCV(Emgu CV)를 이용한 실시간 비전 인식, PLC와의 Modbus RTU 통신, MSSQL 데이터베이스 연동 및 MVVM 아키텍처 구조를 설명합니다.
 
 ---
