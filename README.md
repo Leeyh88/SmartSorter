@@ -10,10 +10,10 @@ WPF 대시보드 UI를 통한 비전 모니터링, Modbus RTU PLC 통신 제어,
 - [4. 실행 및 구축 가이드](#4-실행-및-구축-가이드)
 
 > 📂 **파트별 세부 매뉴얼 (Quick Links)**
-> - [**C# WPF**](./src/README.md) (MVVM 구조, 비전 처리, DB 연동)
-> - [**LS ELECTRIC PLC**](./plc/README.md) (Modbus I/O 맵, XG5000 래더)
-> - [**아두이노 서보모터**](./firmware/README.md) (포토커플러 회로, 서보 핀 맵)
-> - [DB MSSQL](./sql/README.md) (SQL 스크립트, DB ERD)
+> - [**C# WPF**](./tree/main/src) (MVVM 구조, 비전 처리, DB 연동)
+> - [**LS ELECTRIC PLC**](./tree/main/plc) (Modbus I/O 맵, XG5000 래더)
+> - [**아두이노 서보모터**](./tree/main/firmware) (포토커플러 회로, 서보 핀 맵)
+> - [DB MSSQL](./tree/main/sql) (SQL 스크립트, DB ERD)
 ---
 
 ## 1. 시스템 개요
