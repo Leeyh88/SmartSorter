@@ -7,7 +7,8 @@ WPF 대시보드 UI를 통한 비전 모니터링, Modbus RTU PLC 통신 제어,
 - [1. 시스템 개요](#1-시스템-개요)
 - [2. 기술 스택](#2-기술-스택-tech-stack)
 - [3. 주요 기능](#3-주요-기능-key-features)
-- [4. 실행 및 구축 가이드](#4-실행-및-구축-가이드)
+- [4. 하드웨어 결선 다이어그램](#4-하드웨어-결선-다이어그램)
+- [5. 실행 및 구축 가이드](#5-실행-및-구축-가이드)
 
 > 📂 **파트별 세부 매뉴얼 (Quick Links)**
 > - [**C# WPF**](./src) (MVVM 구조, 비전 처리, DB 연동)
@@ -40,8 +41,86 @@ WPF 대시보드 UI를 통한 비전 모니터링, Modbus RTU PLC 통신 제어,
 ### 3️⃣ 데이터베이스 관리 & CSV 내보내기 (Data Analytics) 
 - 모든 분류 이벤트(일시, 운전모드, 색상, 서보각도, 상세 메시지) 실시간 DB(MSSQL) 저장 
 - 기간별 / 운전모드별 / 색상별 필터링 조건 검색 지원 
-- UTF-8 (BOM) 포맷 **CSV 파일 엑셀 내보내기** 지원 (한글 깨짐 방지) 
-## 4. 실행 및 구축 가이드 
+- UTF-8 (BOM) 포맷 **CSV 파일 엑셀 내보내기** 지원 (한글 깨짐 방지)
+## 4. 하드웨어 결선 다이어그램
+```mermaid
+graph TD
+    subgraph POWER ["⚡ External Power (24V SMPS)"]
+        GND24["0V (24G)"]
+        VCC24["+24V"]
+    end
+
+    subgraph PLC ["⚙️ LS ELECTRIC PLC (Relay Output)"]
+        COM["PLC Output COM<br/>(Connected to +24V)"]
+        P21["P21 (RED Output)"]
+        P22["P22 (GREEN Output)"]
+        P23["P23 (BLUE Output)"]
+        P24["P24 (YELLOW Output)"]
+    end
+
+    subgraph OPTO_IN ["🔌 4-Ch Optocoupler Module (Input Side)"]
+        IN_COM["Input COM 단자 (-) <--<br/>0V(24G) 연결"]
+        IN1["IN 1 (+) <-- +24V Signal"]
+        IN2["IN 2 (+) <-- +24V Signal"]
+        IN3["IN 3 (+) <-- +24V Signal"]
+        IN4["IN 4 (+) <-- +24V Signal"]
+    end
+
+    subgraph OPTO_OUT ["🔌 4-Ch Optocoupler Module (Output Side)"]
+        OUT1["OUT 1 (5V Signal)"]
+        OUT2["OUT 2 (5V Signal)"]
+        OUT3["OUT 3 (5V Signal)"]
+        OUT4["OUT 4 (5V Signal)"]
+    end
+
+    subgraph ARDUINO ["🤖 Arduino Uno (5V Logic)"]
+        D2["Digital Pin D2"]
+        D3["Digital Pin D3"]
+        D4["Digital Pin D4"]
+        D5["Digital Pin D5"]
+
+        LOGIC["Servo Logic & Timer"]
+
+        PWM9["PWM D9"]
+        PWM10["PWM D10"]
+    end
+
+    subgraph ACTUATOR ["🦾 Servos"]
+        SV1["Servo 1 (RED/GREEN)"]
+        SV2["Servo 2 (BLUE/YELLOW)"]
+    end
+
+    %% 전원 연결
+    GND24 --> IN_COM
+    VCC24 --> COM
+
+    %% PLC -> 포토커플러 IN
+    P21 -->|"P21 (+24V)"| IN1
+    P22 -->|"P22 (+24V)"| IN2
+    P23 -->|"P23 (+24V)"| IN3
+    P24 -->|"P24 (+24V)"| IN4
+
+    %% 포토커플러 IN -> OUT (절연)
+    IN1 -.-> OUT1
+    IN2 -.-> OUT2
+    IN3 -.-> OUT3
+    IN4 -.-> OUT4
+
+    %% 포토커플러 OUT -> 아두이노
+    OUT1 --> D2
+    OUT2 --> D3
+    OUT3 --> D4
+    OUT4 --> D5
+
+    %% 아두이노 내부 로직 및 서보 출력
+    D2 & D3 & D4 & D5 --> LOGIC
+    LOGIC --> PWM9
+    LOGIC --> PWM10
+    PWM9 --> SV1
+    PWM10 --> SV2
+```
+
+## 5. 실행 및 구축 가이드 
 ### 1️⃣ C# WPF 실행 
 1. `src/SmartSorter.sln` 솔루션 파일을 Visual Studio 2022 이상에서 열기. 
 2. `Services/DatabaseService.cs` 소스코드 내 MSSQL 접속 문자열(`_connectionString`)을 DB 환경(Server IP, DB명, 계정 정보)에 맞게 수정.
