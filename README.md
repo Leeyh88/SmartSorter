@@ -8,7 +8,8 @@ WPF 대시보드 UI를 통한 비전 모니터링, Modbus RTU PLC 통신 제어,
 - [2. 기술 스택](#2-기술-스택-tech-stack)
 - [3. 주요 기능](#3-주요-기능-key-features)
 - [4. 하드웨어 결선 다이어그램](#4-하드웨어-결선-다이어그램)
-- [5. 실행 및 구축 가이드](#5-실행-및-구축-가이드)
+- [5. 시퀀스 다이어그램](#5-시퀀스-다이어그램)
+- [6. 실행 및 구축 가이드](#6-실행-및-구축-가이드)
 
 > 📂 **파트별 세부 매뉴얼 (Quick Links)**
 > - [**C# WPF**](./src) (MVVM 구조, 비전 처리, DB 연동)
@@ -42,6 +43,7 @@ WPF 대시보드 UI를 통한 비전 모니터링, Modbus RTU PLC 통신 제어,
 - 모든 분류 이벤트(일시, 운전모드, 색상, 서보각도, 상세 메시지) 실시간 DB(MSSQL) 저장 
 - 기간별 / 운전모드별 / 색상별 필터링 조건 검색 지원 
 - UTF-8 (BOM) 포맷 **CSV 파일 엑셀 내보내기** 지원 (한글 깨짐 방지)
+---
 ## 4. 하드웨어 결선 다이어그램
 ```mermaid
 graph TD
@@ -119,8 +121,20 @@ graph TD
     PWM9 --> SV1
     PWM10 --> SV2
 ```
-
-## 5. 실행 및 구축 가이드 
+---
+## 5. 시퀀스 다이어그램
+```mermaid
+sequenceDiagram
+    autonumber
+    PLC->>WPF: Modbus 감지 상태 전달
+    WPF->>Camera: 프레임 캡처 & HSV 분석
+    WPF->>PLC: 색상 분류 코드 쓰기 (D0)
+    PLC->>Photocoupler: 분류 신호 출력 (P21~P24)
+    Photocoupler->>Arduino: 5V Trigger (D2~D5)
+    Arduino->>Servo Motor: 서보 동작 (각도 제어 & 1.5초 유지)
+```
+---
+## 6. 실행 및 구축 가이드 
 ### 1️⃣ C# WPF 실행 
 1. `src/SmartSorter.sln` 솔루션 파일을 Visual Studio 2022 이상에서 열기. 
 2. `Services/DatabaseService.cs` 소스코드 내 MSSQL 접속 문자열(`_connectionString`)을 DB 환경(Server IP, DB명, 계정 정보)에 맞게 수정.
