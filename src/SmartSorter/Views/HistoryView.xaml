@@ -1,0 +1,140 @@
+﻿<UserControl x:Class="SmartSorter.Views.HistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="1000">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <!-- 1. 통계 요약 카드 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 2. 필터링 및 컨트롤 바 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 3. DB 이력 데이터그리드 -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================= 1. SUMMARY CARDS ================= -->
+        <Grid Grid.Row="0" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 전체 수량 -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,8,0">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8" Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.3"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="📦 전체 조회 건수" FontSize="12" FontWeight="SemiBold" Foreground="#6B7280"/>
+                    <TextBlock Text="{Binding HistoryTotalCount, StringFormat={}{0} 건}" FontSize="22" FontWeight="Bold" Foreground="#111827" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Red 분류 건수 -->
+            <Border Grid.Column="1" Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,8,0">
+                <StackPanel>
+                    <TextBlock Text="🔴 RED 분류 총계" FontSize="12" FontWeight="Bold" Foreground="#DC2626"/>
+                    <TextBlock Text="{Binding HistoryRedCount, StringFormat={}{0} 개}" FontSize="22" FontWeight="Bold" Foreground="#DC2626" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Green 분류 건수 -->
+            <Border Grid.Column="2" Background="#F0FDF4" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,8,0">
+                <StackPanel>
+                    <TextBlock Text="🟢 GREEN 분류 총계" FontSize="12" FontWeight="Bold" Foreground="#16A34A"/>
+                    <TextBlock Text="{Binding HistoryGreenCount, StringFormat={}{0} 개}" FontSize="22" FontWeight="Bold" Foreground="#16A34A" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Blue 분류 건수 -->
+            <Border Grid.Column="3" Background="#EFF6FF" BorderBrush="#93C5FD" BorderThickness="1" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="🔵 BLUE 분류 총계" FontSize="12" FontWeight="Bold" Foreground="#2563EB"/>
+                    <TextBlock Text="{Binding HistoryBlueCount, StringFormat={}{0} 개}" FontSize="22" FontWeight="Bold" Foreground="#2563EB" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ================= 2. FILTER BAR ================= -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="12" Margin="0,0,0,15">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="8" Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.3"/>
+            </Border.Effect>
+            <DockPanel>
+                <!-- 왼쪽: 검색 필터 요소들 -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- 시작일 ~ 종료일 -->
+                    <TextBlock Text="조회 기간:" VerticalAlignment="Center" FontWeight="Bold" Foreground="#374151" Margin="0,0,8,0"/>
+                    <DatePicker SelectedDate="{Binding SearchStartDate}" Width="130" Height="32" VerticalContentAlignment="Center"/>
+                    <TextBlock Text="~" VerticalAlignment="Center" Margin="8,0"/>
+                    <DatePicker SelectedDate="{Binding SearchEndDate}" Width="130" Height="32" VerticalContentAlignment="Center" Margin="0,0,15,0"/>
+
+                    <!-- 운전 모드 필터 (추가됨) -->
+                    <TextBlock Text="운전 모드:" VerticalAlignment="Center" FontWeight="Bold" Foreground="#374151" Margin="0,0,8,0"/>
+                    <ComboBox SelectedValue="{Binding SelectedModeFilter}" SelectedValuePath="Content" Width="90" Height="32" VerticalContentAlignment="Center" Margin="0,0,15,0">
+                        <ComboBoxItem Content="전체" IsSelected="True"/>
+                        <ComboBoxItem Content="Auto"/>
+                        <ComboBoxItem Content="Manual"/>
+                        <ComboBoxItem Content="Simulation"/>
+                    </ComboBox>
+
+                    <!-- 색상 필터 -->
+                    <TextBlock Text="판별 색상:" VerticalAlignment="Center" FontWeight="Bold" Foreground="#374151" Margin="0,0,8,0"/>
+                    <ComboBox SelectedValue="{Binding SelectedColorFilter}" SelectedValuePath="Content" Width="90" Height="32" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="전체" IsSelected="True"/>
+                        <ComboBoxItem Content="Red"/>
+                        <ComboBoxItem Content="Green"/>
+                        <ComboBoxItem Content="Blue"/>
+                        <ComboBoxItem Content="Yellow"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- 오른쪽: 버튼 영역 (조건 조회 + CSV 내보내기) -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <!-- 검색 버튼 -->
+                    <Button Content="🔍 조건 조회" Command="{Binding SearchDbLogsCommand}" 
+                            Width="100" Height="34" Margin="0,0,8,0"
+                            Style="{StaticResource PrimaryButtonStyle}" FontSize="13"/>
+
+                    <!-- ➕ CSV 내보내기 버튼 추가 -->
+                    <Button Content="📁 CSV 내보내기" Command="{Binding ExportToCsvCommand}" 
+                            Width="120" Height="34" 
+                            Background="#10B981" Foreground="White" FontWeight="Bold" FontSize="13" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="5">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- ================= 3. DATA GRID ================= -->
+        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="12">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="8" Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.3"/>
+            </Border.Effect>
+            <DataGrid ItemsSource="{Binding DbLogs}" AutoGenerateColumns="False" 
+                      IsReadOnly="True" Background="#F9FAFB" RowBackground="White" 
+                      AlternatingRowBackground="#F3F4F6" Foreground="#1F2937" GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="#E5E7EB" HeadersVisibility="Column" BorderThickness="1" BorderBrush="#E5E7EB">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="일시" Binding="{Binding Timestamp, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="170"/>
+                    <DataGridTextColumn Header="운전모드" Binding="{Binding Mode}" Width="110"/>
+                    <DataGridTextColumn Header="판별 색상" Binding="{Binding DetectedColor}" Width="110"/>
+                    <DataGridTextColumn Header="서보 제어 각도" Binding="{Binding TargetServoAngle}" Width="120"/>
+                    <DataGridTextColumn Header="이벤트 상세 내용" Binding="{Binding Message}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</UserControl>

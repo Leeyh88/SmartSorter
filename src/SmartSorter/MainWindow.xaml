@@ -1,0 +1,413 @@
+﻿<Window x:Class="SmartSorter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartSorter"
+        xmlns:Views="clr-namespace:SmartSorter.Views"
+        xmlns:Converters="clr-namespace:SmartSorter.Converters"
+        mc:Ignorable="d"
+        Title="Smart Sorting System Dashboard (AI Vision &amp; Modbus PLC)" Height="850" Width="1280"
+        Background="#F4F6F9" Foreground="#333333">
+
+    <Window.Resources>
+        <Converters:EqualToVisibilityConverter x:Key="EqualToVisibilityConverter"/>
+
+        <Style x:Key="ModeButtonStyle" TargetType="RadioButton">
+            <Setter Property="Background" Value="#E9ECEF"/>
+            <Setter Property="Foreground" Value="#495057"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#CED4DA" BorderThickness="1" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0D6EFD"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0D6EFD"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#4B5563"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <!-- 1. Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- 2. Main Content -->
+            <RowDefinition Height="*"/>
+            <!-- 3. Footer (로그) -->
+            <RowDefinition Height="180"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================= 1. HEADER SECTION ================= -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.3"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 타이틀 및 탭 버튼 -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,20,0">
+                        <TextBlock Text="스마트 컬러 박스 분류 시스템" FontSize="18" FontWeight="Bold" Foreground="#111827"/>
+                        <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#6B7280" Margin="0,3,0,0"/>
+                    </StackPanel>
+
+                    <Border Background="#F3F4F6" CornerRadius="6" Padding="2" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- 1. 카메라 탭 -->
+                            <Button Content="카메라" Command="{Binding NavigateCommand}" CommandParameter="Dashboard" Margin="1,0">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                                        <Setter Property="Width" Value="65"/>
+                                        <Setter Property="Height" Value="28"/>
+                                        <Setter Property="FontSize" Value="12"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#4B5563"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentTab}" Value="Dashboard">
+                                                <Setter Property="Background" Value="#0D6EFD"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <!-- 2. 제어 & 모니터링 탭 -->
+                            <Button Content="제어 &amp; 모니터링" Command="{Binding NavigateCommand}" CommandParameter="Control" Margin="1,0">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                                        <Setter Property="Width" Value="115"/>
+                                        <Setter Property="Height" Value="28"/>
+                                        <Setter Property="FontSize" Value="12"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#4B5563"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentTab}" Value="Control">
+                                                <Setter Property="Background" Value="#0D6EFD"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <!-- 3. 데이터 탭 -->
+                            <Button Content="데이터" Command="{Binding NavigateCommand}" CommandParameter="History" Margin="1,0">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                                        <Setter Property="Width" Value="65"/>
+                                        <Setter Property="Height" Value="28"/>
+                                        <Setter Property="FontSize" Value="12"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#4B5563"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentTab}" Value="History">
+                                                <Setter Property="Background" Value="#0D6EFD"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <!-- 4. 환경설정 탭 -->
+                            <Button Content="환경설정" Command="{Binding NavigateCommand}" CommandParameter="Settings" Margin="1,0">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                                        <Setter Property="Width" Value="75"/>
+                                        <Setter Property="Height" Value="28"/>
+                                        <Setter Property="FontSize" Value="12"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#4B5563"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentTab}" Value="Settings">
+                                                <Setter Property="Background" Value="#0D6EFD"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                
+                
+
+                <!-- 모드 선택 라디오 버튼 -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+                    <RadioButton Content="자동 (Auto)" Command="{Binding ChangeModeCommand}" CommandParameter="Auto" IsChecked="True" Style="{StaticResource ModeButtonStyle}"/>
+                    <RadioButton Content="수동 (Manual)" Command="{Binding ChangeModeCommand}" CommandParameter="Manual" Style="{StaticResource ModeButtonStyle}"/>
+                    <RadioButton Content="시뮬레이션" Command="{Binding ChangeModeCommand}" CommandParameter="Simulation" Style="{StaticResource ModeButtonStyle}"/>
+                </StackPanel>
+
+                <!-- 비상정지 버튼 -->
+                <Button Grid.Column="2" Content="비상 정지" Command="{Binding EmergencyStopCommand}" Width="100" Height="42" 
+                        Background="#DC3545" Foreground="White" FontSize="13" FontWeight="Bold" Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- ================= 2. MAIN CONTENT ================= -->
+        <Grid Grid.Row="1" Margin="0,0,0,15">
+
+            <!-- [A] 대시보드: 실시간 AI 비전 카메라 화면 (좌측: 영상 / 우측: 세부 설정 패널) -->
+            <Grid Visibility="{Binding CurrentTab, Converter={StaticResource EqualToVisibilityConverter}, ConverterParameter=Dashboard}">
+                <Grid.ColumnDefinitions>
+                    <!-- 좌측: 비전 카메라 화면 -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- 우측: 카메라 세부 설정 패널 (폭 330px) -->
+                    <ColumnDefinition Width="330"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 1. 좌측 실시간 카메라 화면 -->
+                <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,12,0">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.3"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <DockPanel Margin="0,0,0,10">
+                            <TextBlock Text="📷 AI Vision 실시간 카메라 모니터" FontSize="16" FontWeight="Bold" Foreground="#1F2937"/>
+                            <TextBlock Text="{Binding CameraStatusText, FallbackValue='미연결'}" HorizontalAlignment="Right" Foreground="#10B981" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </DockPanel>
+
+                        <Border Grid.Row="1" Background="#0F172A" CornerRadius="6" ClipToBounds="True">
+                            <Grid>
+                                <!-- 실시간 카메라 영상 -->
+                                <Image x:Name="VisionPreview" Source="{Binding CurrentVisionImage}" Stretch="Uniform"/>
+
+                                <!-- 미연결 시 안내 플레이스홀더 -->
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding CurrentVisionImage}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <TextBlock Text="📷" FontSize="44" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <TextBlock Text="카메라가 연결되지 않았습니다." Foreground="#94A3B8" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="우측 설정 패널에서 [카메라 시작] 버튼을 눌러주세요." Foreground="#64748B" FontSize="13" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- 2. 우측 카메라 설정 및 감지 영역 조작 패널 -->
+                <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="15">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.3"/>
+                    </Border.Effect>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="0,0,5,0">
+                            <TextBlock Text="⚙️ 카메라 연결 &amp; 비전 설정" FontSize="16" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,12"/>
+
+                            <!-- 1. 카메라 장치 선택 -->
+                            <TextBlock Text="카메라 소스 (Index / IP RTSP)" FontSize="12" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding CameraSource, UpdateSourceTrigger=PropertyChanged}" 
+                                     Height="34" Padding="8,4" FontSize="12" VerticalContentAlignment="Center" Margin="0,0,0,10"/>
+
+                            <!-- 통신 상태 및 시작 버튼 -->
+                            <Border Background="#F1F5F9" CornerRadius="6" Padding="8,6" Margin="0,0,0,10">
+                                <DockPanel>
+                                    <TextBlock Text="통신 상태:" FontSize="12" Foreground="#475569" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CameraStatusText, FallbackValue='미연결'}" HorizontalAlignment="Right" FontSize="12" FontWeight="Bold" Foreground="#0D6EFD" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
+
+                            <Button Command="{Binding ToggleCameraCommand}" Height="38" Margin="0,0,0,12" Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#10B981" CornerRadius="6">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding CameraStatusText}" Value="연결됨 (0)">
+                                                <Setter TargetName="border" Property="Background" Value="#DC3545"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CameraStatusText}" Value="연결 실패">
+                                                <Setter TargetName="border" Property="Background" Value="#EF4444"/>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="FontSize" Value="13"/>
+                                        <Setter Property="Content" Value="📷 카메라 시작"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CameraStatusText}" Value="연결됨 (0)">
+                                                <Setter Property="Content" Value="⏹ 카메라 연결 해제"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <Separator Margin="0,0,0,12" Background="#E2E8F0"/>
+
+                            <!-- 2. AI 비전 ROI 및 인식 간격 세부 설정 -->
+                            <TextBlock Text="🎯 비전 감지 구역(ROI) &amp; 딜레이" FontSize="14" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,10"/>
+
+                            <!-- ⏱️ 인식 간격 타임 (ms) -->
+                            <StackPanel Margin="0,0,0,10">
+                                <DockPanel Margin="0,0,0,4">
+                                    <TextBlock Text="⏱️ 인식 간격 (쿨타임)" FontSize="12" FontWeight="SemiBold" Foreground="#334155"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding DetectionIntervalMs}" FontSize="12" FontWeight="Bold" Foreground="#0D6EFD"/>
+                                        <TextBlock Text=" ms" FontSize="12" Foreground="#64748B"/>
+                                    </StackPanel>
+                                </DockPanel>
+                                <Slider Minimum="100" Maximum="5000" SmallChange="100" LargeChange="500" 
+                                        Value="{Binding DetectionIntervalMs, UpdateSourceTrigger=PropertyChanged}" IsSnapToTickEnabled="True" TickFrequency="100"/>
+                            </StackPanel>
+
+                            <!-- 📐 감지 박스 가로 크기 (Width) -->
+                            <StackPanel Margin="0,0,0,10">
+                                <DockPanel Margin="0,0,0,4">
+                                    <TextBlock Text="📐 박스 너비 (Width)" FontSize="12" FontWeight="SemiBold" Foreground="#334155"/>
+                                    <TextBlock Text="{Binding RoiWidth, StringFormat={}{0} px}" HorizontalAlignment="Right" FontSize="12" FontWeight="Bold" Foreground="#0D6EFD"/>
+                                </DockPanel>
+                                <Slider Minimum="40" Maximum="400" Value="{Binding RoiWidth, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <!-- 📐 감지 박스 세로 크기 (Height) -->
+                            <StackPanel Margin="0,0,0,10">
+                                <DockPanel Margin="0,0,0,4">
+                                    <TextBlock Text="📐 박스 높이 (Height)" FontSize="12" FontWeight="SemiBold" Foreground="#334155"/>
+                                    <TextBlock Text="{Binding RoiHeight, StringFormat={}{0} px}" HorizontalAlignment="Right" FontSize="12" FontWeight="Bold" Foreground="#0D6EFD"/>
+                                </DockPanel>
+                                <Slider Minimum="40" Maximum="400" Value="{Binding RoiHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <!-- ↔️ 위치 이동 X 오프셋 -->
+                            <StackPanel Margin="0,0,0,10">
+                                <DockPanel Margin="0,0,0,4">
+                                    <TextBlock Text="↔️ 위치 이동 (X 오프셋)" FontSize="12" FontWeight="SemiBold" Foreground="#334155"/>
+                                    <TextBlock Text="{Binding RoiOffsetX, StringFormat={}{0} px}" HorizontalAlignment="Right" FontSize="12" FontWeight="Bold" Foreground="#0D6EFD"/>
+                                </DockPanel>
+                                <Slider Minimum="-200" Maximum="200" Value="{Binding RoiOffsetX, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <!-- ↕️ 위치 이동 Y 오프셋 -->
+                            <StackPanel Margin="0,0,0,5">
+                                <DockPanel Margin="0,0,0,4">
+                                    <TextBlock Text="↕️ 위치 이동 (Y 오프셋)" FontSize="12" FontWeight="SemiBold" Foreground="#334155"/>
+                                    <TextBlock Text="{Binding RoiOffsetY, StringFormat={}{0} px}" HorizontalAlignment="Right" FontSize="12" FontWeight="Bold" Foreground="#0D6EFD"/>
+                                </DockPanel>
+                                <Slider Minimum="-200" Maximum="200" Value="{Binding RoiOffsetY, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+
+            <!-- [B] 제어 & 모니터링 통합 화면 -->
+            <Grid Visibility="{Binding CurrentTab, Converter={StaticResource EqualToVisibilityConverter}, ConverterParameter=Control}" 
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Views:ControlPanelView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Grid>
+
+            <!-- [C] 이력/데이터 화면 -->
+            <Grid Visibility="{Binding CurrentTab, Converter={StaticResource EqualToVisibilityConverter}, ConverterParameter=History}" 
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Views:HistoryView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Grid>
+
+            <!-- [D] 환경설정 화면 -->
+            <Grid Visibility="{Binding CurrentTab, Converter={StaticResource EqualToVisibilityConverter}, ConverterParameter=Settings}" 
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Views:SettingsView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Grid>
+
+        </Grid>
+
+        <!-- ================= 3. FOOTER (LOGS) ================= -->
+        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="12">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.3"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="📋 실시간 동작 및 분류 이력 로그" FontSize="14" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8"/>
+
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Logs}" AutoGenerateColumns="False" 
+                          IsReadOnly="True" Background="#F9FAFB" RowBackground="White" 
+                          AlternatingRowBackground="#F3F4F6" Foreground="#1F2937" GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="#E5E7EB" HeadersVisibility="Column" BorderThickness="1" BorderBrush="#E5E7EB">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="시각" Binding="{Binding Timestamp, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="160"/>
+                        <DataGridTextColumn Header="모드" Binding="{Binding Mode}" Width="100"/>
+                        <DataGridTextColumn Header="인식 색상" Binding="{Binding DetectedColor}" Width="100"/>
+                        <DataGridTextColumn Header="제어 각도" Binding="{Binding TargetServoAngle}" Width="100"/>
+                        <DataGridTextColumn Header="상세 메시지" Binding="{Binding Message}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
