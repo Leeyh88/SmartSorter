@@ -31,6 +31,8 @@ graph TD
     MS --> MVM
     MVM <-->|"Data Binding"| MW
     MVM -->|"ADO.NET"| DB
+```
+
 ---
 
 ## 2. 주요 기능 및 모듈 구성
