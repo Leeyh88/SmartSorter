@@ -37,12 +37,12 @@ graph TD
 ## 2. 프로그램 화면 사진 설명
 
 ### 1️⃣ 카메라
-<img width="1920" height="1037" alt="image" src="https://github.com/user-attachments/assets/1fead390-172e-4027-a044-38a3558595de" />
+- <img width="1920" height="1037" alt="image" src="https://github.com/user-attachments/assets/1fead390-172e-4027-a044-38a3558595de" />
 - **카메라연결 및 설정**: 카메라 연결 및 바운딩 박스 & 인식간격 조절 .
 - **실시간 카메라 모니터링** : 카메라를 통한 객체 판별 및 바운딩 박스 영역 실시간 프리뷰
 
 ### 2️⃣ 제어 & 모니터링
-<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/29a05630-6227-4d35-9e0e-fd748a7ef300" />
+- <img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/29a05630-6227-4d35-9e0e-fd748a7ef300" />
 - **PLC 연결** : PLC연결 및 해지.
 - **공정 운전 상태 모니터링** : 
     - 작동 / 대기 / 비상정지 램프 표시
@@ -54,13 +54,13 @@ graph TD
   - 아두이노 서보모터 원점 복귀 및 각도 제어 신호 테스트
 
 ### 3️⃣ 데이터
-<img width="1920" height="1029" alt="image" src="https://github.com/user-attachments/assets/059402bf-5c0c-4c87-8671-7eb19fa696f4" />
+- <img width="1920" height="1029" alt="image" src="https://github.com/user-attachments/assets/059402bf-5c0c-4c87-8671-7eb19fa696f4" />
 - **분류 이력 조회(History View)** : 날짜/시간, 색상 종류, 분류 판별 결과, 처리 시간 데이터 조회
 - **데이터 엑스포트(Export)** : 조회된 공정 이력 데이터를 CSV로 저장 및 이력 출력 기능
 
 
 ### 4️⃣ 환경 설정
-<img width="1920" height="1031" alt="image" src="https://github.com/user-attachments/assets/4caab05c-16a8-4069-8f37-2bc89a50ec66" />
+- <img width="1920" height="1031" alt="image" src="https://github.com/user-attachments/assets/4caab05c-16a8-4069-8f37-2bc89a50ec66" />
 - **PLC 통신 파라미터 세팅** : COM, 국번, 통신주기 설정
 - **서보모터 동작 제어값** :  색상별 서보모터 구동 각도(Angle) 및 유지 시간(Pulse Delay) 세팅
 ---
