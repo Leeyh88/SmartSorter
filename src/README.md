@@ -94,21 +94,28 @@ graph TD
 
 ```text
 src/SmartSorter.Wpf/
-├── App.xaml / App.xaml.cs          # Application Entry Point
-├── MainWindow.xaml                 # 메인 대시보드 View
+├── App.xaml / App.xaml.cs
+│   └── 앱 진입점 및 전역 리소스 정의
+├── MainWindow.xaml
+│   └── 메인 쉘(Shell) 윈도우 UI
+├── Views/
+│   ├── ControlPanelView.xaml   # 메인 제어 및 실시간 모니터링
+│   ├── HistoryView.xaml        # 이력 데이터 및 통계 화면
+│   └── SettingsView.xaml       # 통신 및 비전 환경설정 화면
 ├── ViewModels/
-│   ├── MainViewModel.cs            # 메인 대시보드 ViewModel
-│   └── BaseViewModel.cs            # INotifyPropertyChanged 기본 클래스
+│   └── MainViewModel.cs        # 메인 데이터 컨텍스트 및 중앙 제어기
 ├── Models/
-│   ├── SortingLog.cs               # 분류 이력 데이터 모델
-│   └── SystemConfig.cs             # 시스템 설정 모델
+│   ├── PlcConfigModel.cs       # PLC 및 하드웨어 통신 설정 모델
+│   ├── SortingLog.cs           # 분류 이력 단품 데이터 모델
+│   └── SystemEnum.cs           # 시스템 전역 열거형(Enum) 정의
 ├── Services/
-│   ├── VisionEngine.cs             # OpenCV 카메라 & 색상 검출 서비스
-│   └── ModbusRtuService.cs         # PLC Serial Modbus RTU 통신 서비스
-├── Repositories/
-│   └── DatabaseRepository.cs       # MSSQL DB CRUD 처리 레이어
-└── Helpers/
-    └── RelayedCommand.cs           # WPF ICommand 구현체
+│   ├── CameraService.cs        # OpenCV 기반 카메라 및 비전 검출
+│   ├── DatabaseService.cs      # DB CRUD 및 이력 관리 서비스
+│   ├── PlcService.cs           # PLC 통신 드라이버 및 I/O 동기화
+│   ├── SimulationService.cs    # 실물 장비 부재 시 테스트용 시뮬레이터
+│   └── StringToVisibillityConverter.cs
+└── Converters/
+    └── EqualToVisibillityConverter.cs
 ```
 
 ---
