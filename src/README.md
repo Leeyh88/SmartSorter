@@ -37,7 +37,9 @@ graph TD
 ## 2. 프로그램 화면 사진 설명
 
 ### 1️⃣ 카메라
-- <img width="1920" height="1037" alt="image" src="https://github.com/user-attachments/assets/1fead390-172e-4027-a044-38a3558595de" />
+<img width="1914" height="1000" alt="image" src="https://github.com/user-attachments/assets/082fad72-42c4-4785-9651-fb34378e53db" />
+
+
 - **카메라연결 및 설정**: 카메라 연결 및 바운딩 박스 & 인식간격 조절 .
 - **실시간 카메라 모니터링** : 카메라를 통한 객체 판별 및 바운딩 박스 영역 실시간 프리뷰
 
