@@ -148,3 +148,6 @@ sequenceDiagram
 ### 4️⃣ 아두이노 업로드 
 1. firmware/SmartSorter_Arduino/SmartSorter_Arduino.ino 파일을 아두이노 IDE에서 열기. 
 2. 아두이노 우노(UNO) 보드에 스케치를 업로드.
+---
+## 🎬 시연 영상 (Demo)
+* 📹 **동작 시연 영상:** (장비 결선 및 동작 테스트 완료 후 업데이트 예정)
