@@ -2,11 +2,9 @@
 
 WPF 대시보드 UI를 통한 비전 모니터링, Modbus RTU PLC 통신 제어, 데이터베이스 이력 관리 및 아두이노 서보모터 분류 제어 통합 스마트 팩토리 프로젝트입니다.
 
----
 ## 🎬 시연 영상 (Demo)
 * 📹 **동작 시연 영상:** [C# OpenCV & PLC 스마트 팩토리 비전 분류 시스템 시연 (YouTube)](https://www.youtube.com/watch?v=LPTsCx2lr5Q)
 ---
-
 ### 📌 바로가기 
 - [1. 시스템 개요](#1-시스템-개요)
 - [2. 기술 스택](#2-기술-스택-tech-stack)
