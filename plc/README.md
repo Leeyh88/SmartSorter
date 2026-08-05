@@ -2,6 +2,8 @@
 
 SmartSorter 시스템의 PLC(XGB) 제어 프로그램, 입출력(I/O) 맵, 시리얼 통신(Modbus RTU) 사양 및 하드웨어 배선 가이드입니다.
 
+<img width="1168" height="1974" alt="image" src="https://github.com/user-attachments/assets/d3dc8050-b2d0-4380-bc53-ce2d99d65718" />
+
 ---
 
 ## 1. 시스템 제어 개요
