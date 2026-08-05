@@ -31,11 +31,11 @@ C# WPF 대시보드 및 비전 카메라 시스템과 RS-485(Modbus RTU) 통신�
 ### Digital Output (출력 맵 - 릴레이 출력)
 | 주소 (Address) | 기호 (Symbol) | 명칭 (Name) | 연결 장치 및 설명 |
 | :--- | :--- | :--- | :--- |
-| **`P0020`** | `OUT_CONVEYOR` | 컨베이어 구동 | 컨베이어 모터 메인 콘택터 제어 |
-| **`P0021`** | `OUT_SIGNAL_RED` | 포토커플러 CH1 (RED 분류) | $24{V}$ ➜ 포토커플러 IN1 |
-| **`P0022`** | `OUT_SIGNAL_GREEN` | 포토커플러 CH2 (GREEN 분류) | $24{V}$ ➜ 포토커플러 IN2 |
-| **`P0023`** | `OUT_SIGNAL_BLUE` | 포토커플러 CH3 (BLUE 분류) | $24{V}$ ➜ 포토커플러 IN3 |
-| **`P0024`** | `OUT_SIGNAL_YELLOW` | 포토커플러 CH4 (YELLOW 분류) | $24{V}$ 신호 출력 ➜ 포토커플러 IN4 |
+| **`P0024`** | `OUT_CONVEYOR` | 컨베이어 구동 | 컨베이어 모터 메인 콘택터 제어 |
+| **`P0020`** | `OUT_SIGNAL_RED` | 포토커플러 CH1 (RED 분류) | $24{V}$ ➜ 포토커플러 IN1 |
+| **`P0021`** | `OUT_SIGNAL_GREEN` | 포토커플러 CH2 (GREEN 분류) | $24{V}$ ➜ 포토커플러 IN2 |
+| **`P0022`** | `OUT_SIGNAL_BLUE` | 포토커플러 CH3 (BLUE 분류) | $24{V}$ ➜ 포토커플러 IN3 |
+| **`P0023`** | `OUT_SIGNAL_YELLOW` | 포토커플러 CH4 (YELLOW 분류) | $24{V}$ 신호 출력 ➜ 포토커플러 IN4 |
 
 ### Internal Relay (내부 비트 메모리 - C# 통신용)
 | 주소 (Address) | 기호 (Symbol) | 명칭 (Name) | 통신 방식 및 설명 |
